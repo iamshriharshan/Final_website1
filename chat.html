@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Food Support Chat | Pappa Fresh Customer Service</title>
+    <meta name="description" content="Get instant help with our AI-powered dog food support chat. Questions about nutrition, delivery, products, and more. Expert assistance for Pappa Fresh customers.">
+    <meta name="keywords" content="dog food support, customer service, nutrition help, delivery questions, AI chat support, Pappa Fresh help">
+    <meta name="author" content="Pappa Fresh">
+    <meta property="og:title" content="Dog Food Support Chat | Pappa Fresh Customer Service">
+    <meta property="og:description" content="Get instant help with our AI-powered dog food support chat. Expert assistance for Pappa Fresh customers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pappafresh.it/chat">
+    <meta property="og:image" content="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="chat">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064" alt="Pappa Fresh Logo" height="60">
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="product.html" data-i18n="nav.products">Prodotti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="trial.html" data-i18n="nav.trial">Box Prova</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html" data-i18n="nav.faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="chat.html" data-i18n="nav.chat">Assistenza</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html" data-i18n="nav.contact">Contatti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="cart.html">
+                            <i class="bi bi-cart3"></i>
+                            <span id="cart-badge" class="cart-badge d-none">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3 d-flex align-items-center">
+                        <span class="lang-switch active" data-lang="it">IT</span>
+                        <span class="mx-2">|</span>
+                        <span class="lang-switch" data-lang="en">EN</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="display-4" data-i18n="chat.title">Assistenza Chat</h1>
+                <p class="fs-5 text-muted" data-i18n="chat.subtitle">Siamo qui per aiutarti</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <!-- Chat Container -->
+                <div class="col-lg-8">
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <div class="d-flex align-items-center">
+                                <img src="https://ui-avatars.com/api/?name=Support&background=fff&color=8BC34A&size=40" 
+                                     alt="Support" class="rounded-circle me-3" width="40" height="40">
+                                <div>
+                                    <h5 class="mb-0" data-i18n="chat.support.name">Assistenza Pappa Fresh</h5>
+                                    <small><i class="bi bi-circle-fill text-success me-1" style="font-size: 8px;"></i> <span data-i18n="chat.support.status">Online</span></small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Welcome message will be added by JavaScript based on current language -->
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <form id="chat-form" class="d-flex gap-2">
+                                <input 
+                                    type="text" 
+                                    id="chat-input" 
+                                    class="form-control" 
+                                    data-i18n-placeholder="chat.placeholder"
+                                    placeholder="Scrivi un messaggio..."
+                                    required
+                                >
+                                <button type="submit" class="btn btn-primary" data-i18n="chat.send">
+                                    <i class="bi bi-send"></i> <span class="d-none d-md-inline">Invia</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title" data-i18n="chat.faq.title">Domande Frequenti</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary text-start" onclick="askFAQQuestion('chat.faq.question.storage')">
+                                    <i class="bi bi-question-circle me-2"></i><span data-i18n="chat.faq.storage">Come conservo il cibo?</span>
+                                </button>
+                                <button class="btn btn-outline-primary text-start" onclick="askFAQQuestion('chat.faq.question.delivery')">
+                                    <i class="bi bi-truck me-2"></i><span data-i18n="chat.faq.delivery">Tempi di consegna</span>
+                                </button>
+                                <button class="btn btn-outline-primary text-start" onclick="askFAQQuestion('chat.faq.question.subscription')">
+                                    <i class="bi bi-arrow-repeat me-2"></i><span data-i18n="chat.faq.subscription">Info abbonamento</span>
+                                </button>
+                                <button class="btn btn-outline-primary text-start" onclick="askFAQQuestion('chat.faq.question.portions')">
+                                    <i class="bi bi-calculator me-2"></i><span data-i18n="chat.faq.portions">Calcolo porzioni</span>
+                                </button>
+                                <button class="btn btn-outline-primary text-start" onclick="askFAQQuestion('chat.faq.question.recipe')">
+                                    <i class="bi bi-shuffle me-2"></i><span data-i18n="chat.faq.recipe">Cambiare ricetta</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <i class="bi bi-heart-fill"></i> Pappa Fresh
+                    </div>
+                    <p class="text-white-50" data-i18n="footer.about.text">
+                        Pappa Fresh è il primo servizio italiano di cibo fresco per cani, preparato con ingredienti di qualità umana e consegnato a domicilio.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 data-i18n="footer.links">Link Utili</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="product.html" data-i18n="nav.products">Prodotti</a></li>
+                        <li><a href="trial.html" data-i18n="nav.trial">Box Prova</a></li>
+                        <li><a href="faq.html" data-i18n="nav.faq">FAQ</a></li>
+                        <li><a href="chat.html" data-i18n="nav.chat">Assistenza</a></li>
+                        <li><a href="contact.html" data-i18n="nav.contact">Contatti</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Informazioni</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Chi Siamo</a></li>
+                        <li><a href="#">Come Funziona</a></li>
+                        <li><a href="#">Spedizioni</a></li>
+                        <li><a href="#">Termini e Condizioni</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 data-i18n="footer.newsletter">Newsletter</h5>
+                    <p class="text-white-50" data-i18n="footer.newsletter.text">
+                        Iscriviti per ricevere consigli e offerte esclusive
+                    </p>
+                    <form id="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" id="newsletter-email" 
+                                   data-i18n-placeholder="footer.newsletter.placeholder" 
+                                   placeholder="La tua email" required>
+                            <button class="btn btn-primary" type="submit" data-i18n="footer.newsletter.button">
+                                Iscriviti
+                            </button>
+                        </div>
+                    </form>
+                    <p class="text-white-50 small">
+                        <i class="bi bi-shield-check me-2"></i>100% sicuro e senza spam
+                    </p>
+                </div>
+            </div>
+            
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0 text-white-50">
+                        © 2024 Pappa Fresh. <span data-i18n="footer.rights">Tutti i diritti riservati</span>.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-white-50">
+                        Made with <i class="bi bi-heart-fill text-danger"></i> by pappafresh
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script type="module" src="js/main.js"></script>
+    <script>
+        function askQuestion(question) {
+            document.getElementById('chat-input').value = question;
+            document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+        }
+    </script>
+</body>
+</html>

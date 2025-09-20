@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Test - Pappa Fresh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Cookie Functionality Test</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Language Preference Test</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Current language: <span id="current-lang">Loading...</span></p>
+                        <button class="btn btn-primary me-2" onclick="testSetLanguage('it')">Set Italian</button>
+                        <button class="btn btn-primary me-2" onclick="testSetLanguage('en')">Set English</button>
+                        <button class="btn btn-secondary" onclick="testGetLanguage()">Get Language</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Order Details Test</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success me-2" onclick="testSetOrderDetails()">Set Test Order</button>
+                        <button class="btn btn-info me-2" onclick="testGetOrderDetails()">Get Order</button>
+                        <button class="btn btn-warning" onclick="testRemoveOrderDetails()">Remove Order</button>
+                        <div id="order-result" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Cart Data Test</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success me-2" onclick="testSetCart()">Set Test Cart</button>
+                        <button class="btn btn-info me-2" onclick="testGetCart()">Get Cart</button>
+                        <button class="btn btn-warning" onclick="testClearCart()">Clear Cart</button>
+                        <div id="cart-result" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>All Cookies</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-primary" onclick="showAllCookies()">Show All Cookies</button>
+                        <pre id="all-cookies" class="mt-3"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/cookie-utils.js"></script>
+    <script type="module">
+        import { setCookie, getCookie, removeCookie, getAllCookies } from './js/cookie-utils.js';
+        
+        // Make functions available globally
+        window.setCookie = setCookie;
+        window.getCookie = getCookie;
+        window.removeCookie = removeCookie;
+        window.getAllCookies = getAllCookies;
+        
+        // Test functions
+        window.testSetLanguage = function(lang) {
+            setCookie('preferred-language', lang, 365);
+            document.getElementById('current-lang').textContent = lang;
+            console.log(`Language set to: ${lang}`);
+        };
+        
+        window.testGetLanguage = function() {
+            const lang = getCookie('preferred-language');
+            document.getElementById('current-lang').textContent = lang || 'Not set';
+            console.log(`Current language: ${lang}`);
+        };
+        
+        window.testSetOrderDetails = function() {
+            const orderDetails = {
+                orderNumber: 123456,
+                total: 25.99,
+                date: new Date().toISOString(),
+                customerInfo: {
+                    name: 'Test Customer',
+                    email: 'test@example.com'
+                }
+            };
+            
+            const success = setCookie('order-details', JSON.stringify(orderDetails), 1/24);
+            document.getElementById('order-result').innerHTML = 
+                `<div class="alert ${success ? 'alert-success' : 'alert-danger'}">Order details ${success ? 'set successfully' : 'failed to set (too large)'}</div>`;
+        };
+        
+        window.testGetOrderDetails = function() {
+            const orderData = getCookie('order-details');
+            if (orderData) {
+                try {
+                    const order = JSON.parse(orderData);
+                    document.getElementById('order-result').innerHTML = 
+                        `<div class="alert alert-info">
+                            <strong>Order Found:</strong><br>
+                            Number: ${order.orderNumber}<br>
+                            Total: €${order.total}<br>
+                            Customer: ${order.customerInfo.name}
+                        </div>`;
+                } catch (e) {
+                    document.getElementById('order-result').innerHTML = 
+                        `<div class="alert alert-warning">Invalid order data</div>`;
+                }
+            } else {
+                document.getElementById('order-result').innerHTML = 
+                    `<div class="alert alert-warning">No order details found</div>`;
+            }
+        };
+        
+        window.testRemoveOrderDetails = function() {
+            removeCookie('order-details');
+            document.getElementById('order-result').innerHTML = 
+                `<div class="alert alert-success">Order details removed</div>`;
+        };
+        
+        window.testSetCart = function() {
+            const testCart = [
+                {
+                    id: 1,
+                    name: 'PappaFresh Manzo',
+                    price: 6.66,
+                    image: 'https://lovable-uploads.s3.amazonaws.com/b650dfca-230d-4766-8e94-d7979d40d23e.png',
+                    weight: '400g',
+                    quantity: 2
+                },
+                {
+                    id: 2,
+                    name: 'PappaFresh Pollo',
+                    price: 6.66,
+                    image: 'https://lovable-uploads.s3.amazonaws.com/pollo-product-image.png',
+                    weight: '400g',
+                    quantity: 1
+                }
+            ];
+            
+            const success = setCookie('pappa-cart', JSON.stringify(testCart), 30);
+            document.getElementById('cart-result').innerHTML = 
+                `<div class="alert ${success ? 'alert-success' : 'alert-danger'}">Cart ${success ? 'set successfully' : 'failed to set (too large)'}</div>`;
+        };
+        
+        window.testGetCart = function() {
+            const cartData = getCookie('pappa-cart');
+            if (cartData) {
+                try {
+                    const cart = JSON.parse(cartData);
+                    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    
+                    document.getElementById('cart-result').innerHTML = 
+                        `<div class="alert alert-info">
+                            <strong>Cart Found:</strong><br>
+                            Items: ${totalItems}<br>
+                            Total: €${totalPrice.toFixed(2)}<br>
+                            <small>${cart.length} different products</small>
+                        </div>`;
+                } catch (e) {
+                    document.getElementById('cart-result').innerHTML = 
+                        `<div class="alert alert-warning">Invalid cart data</div>`;
+                }
+            } else {
+                document.getElementById('cart-result').innerHTML = 
+                    `<div class="alert alert-warning">No cart data found</div>`;
+            }
+        };
+        
+        window.testClearCart = function() {
+            removeCookie('pappa-cart');
+            document.getElementById('cart-result').innerHTML = 
+                `<div class="alert alert-success">Cart cleared</div>`;
+        };
+        
+        window.showAllCookies = function() {
+            const cookies = getAllCookies();
+            document.getElementById('all-cookies').textContent = JSON.stringify(cookies, null, 2);
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            testGetLanguage();
+        });
+    </script>
+</body>
+</html>

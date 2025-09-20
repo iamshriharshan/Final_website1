@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Fresh Dog Food Order | Pappa Fresh</title>
+    <meta name="description" content="Complete your Pappa Fresh fresh dog food order. Secure checkout with shipping details and payment. Free delivery across Italy.">
+    <meta name="keywords" content="checkout, fresh dog food order, Pappa Fresh checkout, secure payment, dog food delivery">
+    <meta name="author" content="Pappa Fresh">
+    <meta property="og:title" content="Checkout | Fresh Dog Food Order | Pappa Fresh">
+    <meta property="og:description" content="Complete your Pappa Fresh fresh dog food order. Secure checkout with free delivery across Italy.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pappafresh.it/checkout">
+    <meta property="og:image" content="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Site Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+<body data-page="checkout">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064" alt="Pappa Fresh Logo" height="60">
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="product.html">Prodotti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="trial.html">Box Prova</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contatti</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="bg-light py-4">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="h3 mb-0">Checkout</h1>
+                <p class="text-muted">Completa il tuo ordine</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Shipping Form -->
+                <form id="shipping-form">
+                    <h5 class="mb-3">Informazioni Personali</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Nome *</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cognome *</label>
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    
+                    <h5 class="mb-3 mt-4">Indirizzo di Spedizione</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Indirizzo *</label>
+                        <input type="text" class="form-control" id="address" placeholder="Via, numero civico" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">CAP *</label>
+                                <input type="text" class="form-control" id="postalCode" placeholder="12345" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Città *</label>
+                                <input type="text" class="form-control" id="city" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Provincia *</label>
+                        <input type="text" class="form-control" id="province" placeholder="MI, RM, TO..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefono *</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="+39 123 456 7890" required>
+                    </div>
+                </form>
+
+                <!-- Card Payment -->
+                <h5 class="mt-4">Metodo di Pagamento</h5>
+                <div id="card-element" class="form-control" style="height:50px; padding-top:14px;"></div>
+                <div id="card-errors" class="text-danger mt-2"></div>
+
+                <!-- Terms -->
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="terms" required>
+                    <label class="form-check-label" for="terms">
+                        Accetto i Termini e Condizioni *
+                    </label>
+                </div>
+
+                <!-- Pay Button -->
+                <button id="complete-order" class="btn btn-primary w-100 btn-lg mt-4">
+                    Completa Ordine
+                </button>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Riepilogo Ordine</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="order-items">
+                            <!-- Order items will be loaded here -->
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <span>Subtotale:</span>
+                            <span id="subtotal">€0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Spedizione:</span>
+                            <span id="shipping-cost">€0.00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Totale:</span>
+                            <span id="total">€0.00</span>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-shield-check me-1"></i>
+                                Pagamento sicuro con Stripe
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Initialize app (language, etc.) -->
+    <script type="module" src="js/main.js"></script>
+    <script type="module">
+        import { setCookie, getCookie, removeCookie } from './js/cookie-utils.js';
+        
+        // Make functions available globally for inline scripts
+        window.setCookie = setCookie;
+        window.getCookie = getCookie;
+        window.removeCookie = removeCookie;
+    </script>
+    
+    <!-- Stripe + JS -->
+    <script>
+        // Load order summary on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderSummary();
+        });
+
+        function loadOrderSummary() {
+            const cart = JSON.parse(getCookie('pappa-cart') || '[]');
+            const orderItemsContainer = document.getElementById('order-items');
+            
+            if (cart.length === 0) {
+                orderItemsContainer.innerHTML = '<p class="text-muted">Nessun prodotto nel carrello</p>';
+                return;
+            }
+
+            // Display order items
+            orderItemsContainer.innerHTML = cart.map(item => `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <img src="${item.image}" alt="${item.name}" class="checkout-item-image me-2">
+                        <div>
+                            <small class="fw-bold">${item.name}</small>
+                            <br><small class="text-muted">Qty: ${item.quantity}</small>
+                        </div>
+                    </div>
+                    <small>€${(item.price * item.quantity).toFixed(2)}</small>
+                </div>
+            `).join('');
+
+            // Calculate totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 39 ? 0 : 4.90;
+            const total = subtotal + shipping;
+
+            // Update totals display
+            document.getElementById('subtotal').textContent = `€${subtotal.toFixed(2)}`;
+            document.getElementById('shipping-cost').textContent = shipping === 0 ? 'Gratuita' : `€${shipping.toFixed(2)}`;
+            document.getElementById('total').textContent = `€${total.toFixed(2)}`;
+        }
+
+        const stripe = Stripe("pk_live_51QP8QVBb4iMQmQdrGvs0ogUyXBPPvu82V2uFQHh5l9qIZcElyjtyWVsxSKyqyZX8R06PmLu9pTwViOdc0nVilywA00UTlpnUEU"); // Live publishable key
+        const elements = stripe.elements();
+        const cardElement = elements.create("card");
+        cardElement.mount("#card-element");
+
+        // Display card errors
+        cardElement.on("change", function(event) {
+            document.getElementById("card-errors").textContent = event.error ? event.error.message : "";
+        });
+
+        document.getElementById("complete-order").addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            // Validate form
+            const form = document.getElementById("shipping-form");
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Check terms acceptance
+            const terms = document.getElementById("terms");
+            if (!terms.checked) {
+                alert('Devi accettare i termini e condizioni per procedere');
+                return;
+            }
+
+            // Show loading state
+            const button = document.getElementById("complete-order");
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = "Elaborazione...";
+
+            try {
+                // Calculate total from cart
+                const cart = JSON.parse(getCookie('pappa-cart') || '[]');
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const shipping = subtotal >= 39 ? 0 : 4.90;
+                const total = subtotal + shipping;
+                const amountInCents = Math.round(total * 100); // Convert to cents
+
+                // Call backend to create PaymentIntent
+                const response = await fetch("/create-payment-intent", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        amount: amountInCents,
+                        currency: 'eur'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Errore nella creazione del pagamento');
+                }
+
+                const { clientSecret } = await response.json();
+
+                // Confirm card payment
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: document.getElementById("firstName").value + " " + document.getElementById("lastName").value,
+                            email: document.getElementById("email").value,
+                            address: {
+                                line1: document.getElementById("address").value,
+                                city: document.getElementById("city").value,
+                                state: document.getElementById("province").value,
+                                postal_code: document.getElementById("postalCode").value,
+                                country: 'IT'
+                            },
+                            phone: document.getElementById("phone").value
+                        },
+                    },
+                });
+
+                if (error) {
+                    document.getElementById("card-errors").textContent = error.message;
+                    button.disabled = false;
+                    button.textContent = originalText;
+                } else if (paymentIntent.status === "succeeded") {
+                    // Store order details
+                    const orderDetails = {
+                        orderNumber: Math.floor(100000 + Math.random() * 900000),
+                        total: total,
+                        date: new Date().toISOString(),
+                        paymentIntentId: paymentIntent.id,
+                        customerInfo: {
+                            name: document.getElementById("firstName").value + " " + document.getElementById("lastName").value,
+                            email: document.getElementById("email").value,
+                            phone: document.getElementById("phone").value
+                        },
+                        shippingAddress: {
+                            address: document.getElementById("address").value,
+                            city: document.getElementById("city").value,
+                            province: document.getElementById("province").value,
+                            postalCode: document.getElementById("postalCode").value,
+                            country: 'Italia'
+                        }
+                    };
+                    // Store order details in cookie (temporary, expires in 1 hour)
+                    setCookie('order-details', JSON.stringify(orderDetails), 1/24);
+                    
+                    // Clear cart
+                    removeCookie('pappa-cart');
+                    
+                    // Redirect to success page
+                    window.location.href = "order-success.html";
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                document.getElementById("card-errors").textContent = "Errore durante il pagamento. Riprova.";
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        });
+    </script>
+</body>
+</html>

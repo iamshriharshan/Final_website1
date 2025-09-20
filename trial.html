@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Food Calculator & Trial Box | Pappa Fresh</title>
+    <meta name="description" content="Calculate your dog's perfect nutrition plan with our vet-developed calculator. Get personalized portions and try our fresh dog food trial box.">
+    <meta name="keywords" content="dog food calculator, nutrition calculator, trial box, fresh dog food, personalized portions, vet nutrition">
+    <meta name="author" content="Pappa Fresh">
+    <meta property="og:title" content="Dog Food Calculator & Trial Box | Pappa Fresh">
+    <meta property="og:description" content="Calculate your dog's perfect nutrition plan with our vet-developed calculator. Personalized portions and trial box.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pappafresh.it/trial">
+    <meta property="og:image" content="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="trial">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064" alt="Pappa Fresh Logo" height="60">
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="product.html" data-i18n="nav.products">Prodotti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="trial.html" data-i18n="nav.trial">Box Prova</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html" data-i18n="nav.faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="chat.html" data-i18n="nav.chat">Assistenza</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html" data-i18n="nav.contact">Contatti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="cart.html">
+                            <i class="bi bi-cart3"></i>
+                            <span id="cart-badge" class="cart-badge d-none">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3 d-flex align-items-center">
+                        <span class="lang-switch active" data-lang="it">IT</span>
+                        <span class="mx-2">|</span>
+                        <span class="lang-switch" data-lang="en">EN</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="display-4" data-i18n="trial.title">Calcola il Piano Perfetto per il tuo Cane</h1>
+                <p class="fs-5 text-muted" data-i18n="trial.subtitle">Scopri le porzioni ideali e il piano nutrizionale personalizzato</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <!-- Step Indicator -->
+                    <div class="step-indicator mb-5">
+                        <div class="step active">
+                            <div class="step-circle">1</div>
+                            <span class="d-none d-md-inline ms-2" data-i18n="trial.step1">Informazioni Base</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                            <div class="step-circle">2</div>
+                            <span class="d-none d-md-inline ms-2" data-i18n="trial.step2">Salute e Attività</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                            <div class="step-circle">3</div>
+                            <span class="d-none d-md-inline ms-2" data-i18n="trial.step3">Il Tuo Piano</span>
+                        </div>
+                    </div>
+
+                    <!-- Calculator Container -->
+                    <div class="calculator-container">
+                        <form id="calculator-form">
+                            <!-- Step 1: Basic Info -->
+                            <div class="calculator-step active" id="step-1">
+                                <h3 class="mb-4" data-i18n="trial.step1">Informazioni Base</h3>
+                                
+                                <div class="mb-3">
+                                    <label for="dog-name" class="form-label" data-i18n="trial.name">Nome del cane</label>
+                                    <input type="text" class="form-control" id="dog-name" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="dog-breed" class="form-label" data-i18n="trial.breed">Razza</label>
+                                    <input type="text" class="form-control" id="dog-breed" 
+                                           placeholder="Es. Labrador, Meticcio, Beagle..." required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="dog-weight" class="form-label" data-i18n="trial.weight">Peso attuale (kg)</label>
+                                    <input type="number" class="form-control" id="dog-weight" 
+                                           min="1" max="100" step="0.5" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="dog-age" class="form-label" data-i18n="trial.age">Età</label>
+                                    <select class="form-select" id="dog-age" required>
+                                        <option value="">Seleziona...</option>
+                                        <option value="puppy" data-i18n="trial.age.puppy">Cucciolo (2-12 mesi)</option>
+                                        <option value="young" data-i18n="trial.age.young">Giovane (1-2 anni)</option>
+                                        <option value="adult" data-i18n="trial.age.adult">Adulto (3-7 anni)</option>
+                                        <option value="senior" data-i18n="trial.age.senior">Senior (8+ anni)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary" id="next-step-1" data-i18n="trial.next">
+                                        Avanti <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Health & Activity -->
+                            <div class="calculator-step" id="step-2">
+                                <h3 class="mb-4" data-i18n="trial.step2">Salute e Attività</h3>
+                                
+                                <div class="mb-3">
+                                    <label for="dog-activity" class="form-label" data-i18n="trial.activity">Livello di attività</label>
+                                    <select class="form-select" id="dog-activity" required>
+                                        <option value="">Seleziona...</option>
+                                        <option value="low" data-i18n="trial.activity.low">Basso (passeggiate tranquille)</option>
+                                        <option value="moderate" data-i18n="trial.activity.moderate">Moderato (1-2 ore al giorno)</option>
+                                        <option value="high" data-i18n="trial.activity.high">Alto (molto attivo, sport)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label" data-i18n="trial.neutered">Sterilizzato/Castrato?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dog-neutered" 
+                                               id="neutered-yes" value="yes" required>
+                                        <label class="form-check-label" for="neutered-yes" data-i18n="trial.yes">Sì</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dog-neutered" 
+                                               id="neutered-no" value="no" required>
+                                        <label class="form-check-label" for="neutered-no" data-i18n="trial.no">No</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="dog-condition" class="form-label" data-i18n="trial.condition">Condizione corporea</label>
+                                    <select class="form-select" id="dog-condition" required>
+                                        <option value="">Seleziona...</option>
+                                        <option value="underweight" data-i18n="trial.condition.underweight">Sottopeso</option>
+                                        <option value="ideal" data-i18n="trial.condition.ideal">Peso ideale</option>
+                                        <option value="overweight" data-i18n="trial.condition.overweight">Sovrappeso</option>
+                                        <option value="obese" data-i18n="trial.condition.obese">Obeso</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-primary" id="back-step-2" data-i18n="trial.back">
+                                        <i class="bi bi-arrow-left me-2"></i>Indietro
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="next-step-2" data-i18n="trial.calculate">
+                                        Calcola Piano <i class="bi bi-calculator ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Results -->
+                            <div class="calculator-step" id="step-3">
+                                <h3 class="mb-4">
+                                    <span data-i18n="trial.results.title">Il Piano Perfetto per</span> 
+                                    <span id="result-dog-name" class="text-primary"></span>
+                                </h3>
+                                
+                                <div class="nutrition-card">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-3">
+                                            <div class="nutrition-metric">
+                                                <div class="nutrition-value" id="result-calories">0</div>
+                                                <div class="nutrition-label" data-i18n="trial.results.calories">Calorie giornaliere</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3">
+                                            <div class="nutrition-metric">
+                                                <div class="nutrition-value" id="result-portions">0</div>
+                                                <div class="nutrition-label" data-i18n="trial.results.portions">Bustine Pappa Fresh al giorno</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3">
+                                            <div class="nutrition-metric">
+                                                <div class="nutrition-value" id="result-monthly">0</div>
+                                                <div class="nutrition-label" data-i18n="trial.results.monthly">Bustine al mese</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3">
+                                            <div class="nutrition-metric">
+                                                <div class="nutrition-value">€<span id="result-cost">0</span></div>
+                                                <div class="nutrition-label">Costo mensile stimato</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-start mt-4">
+                                    <button type="button" class="btn btn-outline-primary" id="back-step-3" data-i18n="trial.back">
+                                        <i class="bi bi-arrow-left me-2"></i>Modifica Dati
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Recommended Product Section -->
+                    <div id="recommended-product-container" class="mt-5"></div>
+                    
+                    <!-- Other Products Section -->
+                    <div id="other-products-container" class="mt-5"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <i class="bi bi-heart-fill"></i> Pappa Fresh
+                    </div>
+                    <p class="text-white-50" data-i18n="footer.about.text">
+                        Pappa Fresh è il primo servizio italiano di cibo fresco per cani, preparato con ingredienti di qualità umana e consegnato a domicilio.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 data-i18n="footer.links">Link Utili</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="product.html" data-i18n="nav.products">Prodotti</a></li>
+                        <li><a href="trial.html" data-i18n="nav.trial">Box Prova</a></li>
+                        <li><a href="faq.html" data-i18n="nav.faq">FAQ</a></li>
+                        <li><a href="chat.html" data-i18n="nav.chat">Assistenza</a></li>
+                        <li><a href="contact.html" data-i18n="nav.contact">Contatti</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Informazioni</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Chi Siamo</a></li>
+                        <li><a href="#">Come Funziona</a></li>
+                        <li><a href="#">Spedizioni</a></li>
+                        <li><a href="#">Termini e Condizioni</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0 text-white-50">
+                        © 2024 Pappa Fresh. <span data-i18n="footer.rights">Tutti i diritti riservati</span>.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-white-50">
+                        Made with <i class="bi bi-heart-fill text-danger"></i> by pappafresh
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

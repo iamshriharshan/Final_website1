@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | Fresh Dog Food | Pappa Fresh</title>
+    <meta name="description" content="Your Pappa Fresh sh   opping cart. Review fresh dog food products, adjust quantities, and proceed to checkout. Free shipping over €39.">
+    <meta name="keywords" content="shopping cart, fresh dog food cart, Pappa Fresh cart, dog food checkout, free shipping">
+    <meta name="author" content="Pappa Fresh">
+    <meta property="og:title" content="Shopping Cart | Fresh Dog Food | Pappa Fresh">
+    <meta property="og:description" content="Your Pappa Fresh shopping cart. Review fresh dog food products and proceed to checkout.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pappafresh.it/cart">
+    <meta property="og:image" content="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="cart">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="//pappafresh.it/cdn/shop/files/logo_pappa_fresh_web_copia_300x300.png?v=1633080064" alt="Pappa Fresh Logo" height="60">
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="product.html" data-i18n="nav.products">Prodotti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="trial.html" data-i18n="nav.trial">Box Prova</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html" data-i18n="nav.faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="chat.html" data-i18n="nav.chat">Assistenza</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html" data-i18n="nav.contact">Contatti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative active" href="cart.html">
+                            <i class="bi bi-cart3"></i>
+                            <span id="cart-badge" class="cart-badge d-none">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3 d-flex align-items-center">
+                        <span class="lang-switch active" data-lang="it">IT</span>
+                        <span class="mx-2">|</span>
+                        <span class="lang-switch" data-lang="en">EN</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Content -->
+    <section class="section-padding pt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    <!-- Products Table -->
+                    <div id="cart-items-container" class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Prodotto</th>
+                                            <th scope="col">Prezzo</th>
+                                            <th scope="col">Quantità</th>
+                                            <th scope="col">Totale</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cart-items-body">
+                                        <!-- Dynamic content loaded by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty Cart -->
+                    <div id="empty-cart" class="text-center py-5" style="display: none;">
+                        <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3" data-i18n="cart.empty">Il carrello è vuoto</h3>
+                        <p class="text-muted">Aggiungi i prodotti per il tuo cane</p>
+                        <a href="product.html" class="btn btn-primary" data-i18n="cart.continue">
+                            <i class="bi bi-arrow-left me-2"></i>Continua lo Shopping
+                        </a>
+                    </div>
+                    
+                    <!-- Continue Shopping Button -->
+                    <div class="mt-3" id="continue-shopping-btn" style="display: none;">
+                        <a href="product.html" class="btn btn-outline-secondary" data-i18n="cart.continue">
+                            <i class="bi bi-arrow-left me-2"></i>Continua lo Shopping
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card order-summary position-sticky" style="top: 20px;" id="order-summary-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Riepilogo Ordine</h5>
+                            
+                            <hr>
+                            
+                            <!-- Totals -->
+                            <div class="d-flex justify-content-between mb-2">
+                                <span data-i18n="cart.subtotal">Subtotale</span>
+                                <span id="subtotal">€0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span data-i18n="cart.shipping">Spedizione</span>
+                                <span id="shipping-cost">€0.00</span>
+                            </div>
+                            <div class="small text-muted mb-3">
+                                <i class="bi bi-truck me-1"></i>Spedizione gratuita sopra €39
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="d-flex justify-content-between mb-4">
+                                <strong data-i18n="cart.total">Totale</strong>
+                                <strong id="total">€0.00</strong>
+                            </div>
+                            
+                            <!-- Purchase Type Selection -->
+                            <div class="alert alert-info mb-3">
+                                <small><i class="bi bi-info-circle me-1"></i><span data-i18n="cart.choose">Scegli il tipo di acquisto:</span></small>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100 mb-2" onclick="window.location.href='checkout.html?type=single'">
+                                <span data-i18n="cart.single">Acquisto Singolo</span>
+                            </button>
+                            
+                            <button class="btn btn-success w-100" onclick="window.location.href='checkout.html?type=subscription'">
+                                <span data-i18n="cart.subscription">Abbonamento - Risparmia 10%</span>
+                            </button>
+                            
+                            <!-- Security Info -->
+                            <div class="text-center mt-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-shield-check me-1"></i><span data-i18n="cart.secure">Pagamento sicuro con SSL</span>
+                                </small>
+                            </div>
+                            
+                            <!-- Payment Methods -->
+                            <div class="text-center mt-3">
+                                <small class="text-muted d-block mb-2" data-i18n="cart.accept">Accettiamo:</small>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" height="25">
+                                    <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" height="25">
+                                    <img src="https://img.icons8.com/color/48/000000/paypal.png" alt="PayPal" height="25">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <i class="bi bi-heart-fill"></i> Pappa Fresh
+                    </div>
+                    <p class="text-white-50" data-i18n="footer.about.text">
+                        Pappa Fresh è il primo servizio italiano di cibo fresco per cani, preparato con ingredienti di qualità umana e consegnato a domicilio.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 data-i18n="footer.links">Link Utili</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="product.html" data-i18n="nav.products">Prodotti</a></li>
+                        <li><a href="trial.html" data-i18n="nav.trial">Box Prova</a></li>
+                        <li><a href="faq.html" data-i18n="nav.faq">FAQ</a></li>
+                        <li><a href="chat.html" data-i18n="nav.chat">Assistenza</a></li>
+                        <li><a href="contact.html" data-i18n="nav.contact">Contatti</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Informazioni</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Chi Siamo</a></li>
+                        <li><a href="#">Come Funziona</a></li>
+                        <li><a href="#">Spedizioni</a></li>
+                        <li><a href="#">Termini e Condizioni</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 data-i18n="footer.newsletter">Newsletter</h5>
+                    <p class="text-white-50" data-i18n="footer.newsletter.text">
+                        Iscriviti per ricevere consigli e offerte esclusive
+                    </p>
+                    <form id="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" id="newsletter-email" 
+                                   data-i18n-placeholder="footer.newsletter.placeholder" 
+                                   placeholder="La tua email" required>
+                            <button class="btn btn-primary" type="submit" data-i18n="footer.newsletter.button">
+                                Iscriviti
+                            </button>
+                        </div>
+                    </form>
+                    <p class="text-white-50 small">
+                        <i class="bi bi-shield-check me-2"></i>100% sicuro e senza spam
+                    </p>
+                </div>
+            </div>
+            
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0 text-white-50">
+                        © 2024 Pappa Fresh. <span data-i18n="footer.rights">Tutti i diritti riservati</span>.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-white-50">
+                        Made with <i class="bi bi-heart-fill text-danger"></i> by pappafresh
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script type="module" src="js/main.js"></script>
+    
+    <style>
+        /* Cart Table Styles */
+        .table > tbody > tr > td {
+            vertical-align: middle;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quantity-btn:hover {
+            background: #f8f9fa;
+            border-color: #8BC34A;
+        }
+        
+        .quantity-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            
+            .cart-item-image {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</body>
+</html>

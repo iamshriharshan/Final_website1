@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Payment - Pappa Fresh</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #card-element { border: 1px solid #ccc; padding: 10px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Payment System Test</h1>
+    
+    <div class="test-section">
+        <h3>1. Server Health Check</h3>
+        <button onclick="testHealth()">Test Server Health</button>
+        <div id="health-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Stripe Payment Intent Creation</h3>
+        <button onclick="testPaymentIntent()">Test Payment Intent</button>
+        <div id="payment-intent-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Full Payment Flow Test</h3>
+        <p>Test amount: €50.00</p>
+        <div id="card-element"></div>
+        <button onclick="testFullPayment()" id="pay-button">Test Full Payment</button>
+        <div id="payment-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Test Results Summary</h3>
+        <div id="summary"></div>
+    </div>
+
+    <script>
+        const stripe = Stripe('pk_live_51QP8QVBb4iMQmQdrGvs0ogUyXBPPvu82V2uFQHh5l9qIZcElyjtyWVsxSKyqyZX8R06PmLu9pTwViOdc0nVilywA00UTlpnUEU');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        let testResults = {
+            serverHealth: false,
+            paymentIntent: false,
+            fullPayment: false
+        };
+
+        async function testHealth() {
+            try {
+                const response = await fetch('/health');
+                const result = await response.json();
+                document.getElementById('health-result').innerHTML = 
+                    `<span class="success">✅ Server is healthy: ${result.status}</span>`;
+                testResults.serverHealth = true;
+                updateSummary();
+            } catch (error) {
+                document.getElementById('health-result').innerHTML = 
+                    `<span class="error">❌ Server health check failed: ${error.message}</span>`;
+                testResults.serverHealth = false;
+                updateSummary();
+            }
+        }
+
+        async function testPaymentIntent() {
+            try {
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 5000, currency: 'eur' })
+                });
+                const result = await response.json();
+                document.getElementById('payment-intent-result').innerHTML = 
+                    `<span class="success">✅ Payment intent created: ${result.clientSecret.substring(0, 20)}...</span>`;
+                testResults.paymentIntent = true;
+                updateSummary();
+            } catch (error) {
+                document.getElementById('payment-intent-result').innerHTML = 
+                    `<span class="error">❌ Payment intent creation failed: ${error.message}</span>`;
+                testResults.paymentIntent = false;
+                updateSummary();
+            }
+        }
+
+        async function testFullPayment() {
+            const button = document.getElementById('pay-button');
+            button.disabled = true;
+            button.textContent = 'Processing...';
+
+            try {
+                // Create payment intent
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 5000, currency: 'eur' })
+                });
+                const { clientSecret } = await response.json();
+
+                // Confirm payment with test card
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: 'Test User',
+                            email: 'test@example.com'
+                        }
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('payment-result').innerHTML = 
+                        `<span class="error">❌ Payment failed: ${error.message}</span>`;
+                    testResults.fullPayment = false;
+                } else if (paymentIntent.status === 'succeeded') {
+                    document.getElementById('payment-result').innerHTML = 
+                        `<span class="success">✅ Payment succeeded! ID: ${paymentIntent.id}</span>`;
+                    testResults.fullPayment = true;
+                }
+                updateSummary();
+            } catch (error) {
+                document.getElementById('payment-result').innerHTML = 
+                    `<span class="error">❌ Payment test failed: ${error.message}</span>`;
+                testResults.fullPayment = false;
+                updateSummary();
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Test Full Payment';
+            }
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            const passed = Object.values(testResults).filter(Boolean).length;
+            const total = Object.keys(testResults).length;
+            
+            summary.innerHTML = `
+                <h4>Test Results: ${passed}/${total} passed</h4>
+                <ul>
+                    <li>Server Health: ${testResults.serverHealth ? '✅' : '❌'}</li>
+                    <li>Payment Intent: ${testResults.paymentIntent ? '✅' : '❌'}</li>
+                    <li>Full Payment: ${testResults.fullPayment ? '✅' : '❌'}</li>
+                </ul>
+            `;
+        }
+
+        // Auto-run health check on page load
+        window.addEventListener('load', testHealth);
+    </script>
+</body>
+</html>

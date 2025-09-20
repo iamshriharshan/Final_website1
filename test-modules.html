@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Modular JavaScript</title>
+</head>
+<body data-page="test">
+    <h1>Test Modular JavaScript</h1>
+    <p>Check the browser console to see if modules are loading correctly.</p>
+    
+    <button onclick="testAddToCart()">Test addToCart</button>
+    <button onclick="testShowNotification()">Test showNotification</button>
+    
+    <script type="module" src="js/main.js"></script>
+    
+    <script>
+        function testAddToCart() {
+            if (typeof addToCart === 'function') {
+                console.log('✅ addToCart function is available');
+                addToCart(1);
+            } else {
+                console.log('❌ addToCart function is not available');
+            }
+        }
+        
+        function testShowNotification() {
+            if (typeof showNotification === 'function') {
+                console.log('✅ showNotification function is available');
+                showNotification('Test notification!', 'success');
+            } else {
+                console.log('❌ showNotification function is not available');
+            }
+        }
+    </script>
+</body>
+</html>

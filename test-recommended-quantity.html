@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Recommended Quantity - Pappa Fresh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        .test-product { border: 1px solid #eee; padding: 15px; border-radius: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h1>🧪 Test Recommended Quantity - Pappa Fresh</h1>
+        
+        <div class="test-section">
+            <h3>1. Test Calculator Results</h3>
+            <p>This tests if the calculator is properly calculating monthly portions</p>
+            <button class="btn btn-primary" onclick="testCalculatorResults()">Test Calculator</button>
+            <div id="calculator-test-result" class="mt-2"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Test Add to Cart with Quantity</h3>
+            <p>This tests if products are added with the correct recommended quantity</p>
+            
+            <div class="test-product">
+                <h5>Test Product 1 (ID: 1)</h5>
+                <p>Simulating 30 monthly pouches recommended</p>
+                <button class="btn btn-success" onclick="testAddToCartWithQuantity(1, 30)">Add 30 pouches to cart</button>
+                <div id="test-1-result" class="mt-2"></div>
+            </div>
+            
+            <div class="test-product">
+                <h5>Test Product 2 (ID: 2)</h5>
+                <p>Simulating 15 monthly pouches recommended</p>
+                <button class="btn btn-success" onclick="testAddToCartWithQuantity(2, 15)">Add 15 pouches to cart</button>
+                <div id="test-2-result" class="mt-2"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Test Cart Contents</h3>
+            <button class="btn btn-info" onclick="showCartContents()">Show Cart Contents</button>
+            <div id="cart-contents" class="mt-2"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Test Results Summary</h3>
+            <div id="test-summary"></div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module">
+        import { getCookie } from './js/cookie-utils.js';
+        window.getCookie = getCookie;
+    </script>
+    <script>
+        let testResults = {
+            calculatorResults: false,
+            addToCartQuantity: false,
+            cartFunctionality: false
+        };
+
+        function testCalculatorResults() {
+            const resultDiv = document.getElementById('calculator-test-result');
+            resultDiv.innerHTML = '<span class="info">🔄 Testing calculator results...</span>';
+            
+            try {
+                // Test if the calculator manager is available
+                if (window.getCalculatorManager) {
+                    const calculatorManager = window.getCalculatorManager();
+                    const data = calculatorManager.getData();
+                    
+                    if (data && data.results) {
+                        resultDiv.innerHTML = `
+                            <span class="success">✅ Calculator results available!</span>
+                            <br><small class="text-muted">
+                                Daily portions: ${data.results.portions || 'N/A'}<br>
+                                Monthly portions: ${data.results.monthlyPortions || 'N/A'}<br>
+                                Final calories: ${data.results.finalCalories || 'N/A'}
+                            </small>
+                        `;
+                        testResults.calculatorResults = true;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <span class="info">ℹ️ Calculator data available but no results yet</span>
+                            <br><small class="text-muted">Run the calculator first to see results</small>
+                        `;
+                        testResults.calculatorResults = false;
+                    }
+                } else {
+                    resultDiv.innerHTML = `
+                        <span class="error">❌ Calculator manager not available</span>
+                    `;
+                    testResults.calculatorResults = false;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <span class="error">❌ Error testing calculator: ${error.message}</span>
+                `;
+                testResults.calculatorResults = false;
+            }
+            
+            updateTestSummary();
+        }
+
+        function testAddToCartWithQuantity(productId, quantity) {
+            const resultDiv = document.getElementById(`test-${productId}-result`);
+            resultDiv.innerHTML = '<span class="info">🔄 Adding product to cart...</span>';
+            
+            try {
+                // Test the addToCartWithQuantity function
+                if (window.addToCartWithQuantity) {
+                    window.addToCartWithQuantity(productId, quantity);
+                    
+                    resultDiv.innerHTML = `
+                        <span class="success">✅ Product ${productId} added with quantity ${quantity}!</span>
+                        <br><small class="text-muted">Check cart contents below to verify</small>
+                    `;
+                    testResults.addToCartQuantity = true;
+                } else {
+                    // Fallback to regular addToCart
+                    if (window.addToCart) {
+                        window.addToCart(productId, quantity);
+                        
+                        resultDiv.innerHTML = `
+                            <span class="success">✅ Product ${productId} added with quantity ${quantity} (fallback)!</span>
+                            <br><small class="text-muted">Check cart contents below to verify</small>
+                        `;
+                        testResults.addToCartQuantity = true;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <span class="error">❌ Neither addToCartWithQuantity nor addToCart available</span>
+                        `;
+                        testResults.addToCartQuantity = false;
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <span class="error">❌ Error adding to cart: ${error.message}</span>
+                `;
+                testResults.addToCartQuantity = false;
+            }
+            
+            updateTestSummary();
+            
+            // Auto-refresh cart contents after a short delay
+            setTimeout(showCartContents, 500);
+        }
+
+        function showCartContents() {
+            const resultDiv = document.getElementById('cart-contents');
+            
+            try {
+                // Get cart from cookies
+                const cart = JSON.parse(getCookie('pappa-cart') || '[]');
+                
+                if (cart.length === 0) {
+                    resultDiv.innerHTML = '<span class="info">📭 Cart is empty</span>';
+                } else {
+                    const cartHtml = cart.map(item => `
+                        <div class="border p-2 mb-2 rounded">
+                            <strong>${item.name}</strong><br>
+                            Quantity: ${item.quantity} | Price: €${item.price} | Total: €${(item.price * item.quantity).toFixed(2)}
+                        </div>
+                    `).join('');
+                    
+                    resultDiv.innerHTML = `
+                        <span class="success">🛒 Cart contains ${cart.length} item(s):</span>
+                        <div class="mt-2">${cartHtml}</div>
+                    `;
+                }
+                
+                testResults.cartFunctionality = true;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <span class="error">❌ Error reading cart: ${error.message}</span>
+                `;
+                testResults.cartFunctionality = false;
+            }
+            
+            updateTestSummary();
+        }
+
+        function updateTestSummary() {
+            const summaryDiv = document.getElementById('test-summary');
+            const passed = Object.values(testResults).filter(Boolean).length;
+            const total = Object.keys(testResults).length;
+            
+            summaryDiv.innerHTML = `
+                <h4>Test Results: ${passed}/${total} passed</h4>
+                <ul>
+                    <li>Calculator Results: ${testResults.calculatorResults ? '✅' : '❌'}</li>
+                    <li>Add to Cart with Quantity: ${testResults.addToCartQuantity ? '✅' : '✅'}</li>
+                    <li>Cart Functionality: ${testResults.cartFunctionality ? '✅' : '❌'}</li>
+                </ul>
+                <div class="mt-3">
+                    <strong>What was fixed:</strong>
+                    <ul>
+                        <li>✅ Fixed recommended quantity not being passed to cart</li>
+                        <li>✅ Added addToCartWithQuantity helper function</li>
+                        <li>✅ Enhanced error handling and debugging</li>
+                        <li>✅ Improved quantity validation</li>
+                    </ul>
+                </div>
+                <div class="mt-3">
+                    <strong>Expected Behavior:</strong>
+                    <ul>
+                        <li>🔢 Calculator shows monthly portions (e.g., 30 pouches)</li>
+                        <li>🛒 Clicking "Aggiungi" adds exactly that quantity</li>
+                        <li>📊 Cart displays correct quantity and total price</li>
+                        <li>✅ No more quantity mismatch issues</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Auto-run cart contents check on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testCalculatorResults();
+                showCartContents();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas (if any)
+Disallow: /node_modules/
+Disallow: /.git/
+
+# Sitemap location
+Sitemap: https://pappafresh.it/sitemap.xml
+
+# Crawl delay (optional - be respectful to servers)
+Crawl-delay: 1
